@@ -1,0 +1,56 @@
+# .github/workflows/lint.yml
+
+name: Lint Code
+
+on: [push, pull_request]
+
+jobs:
+  lint-frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install
+      - name: Run ESLint
+        run: npm run lint # You will need to add this script to your package.json
+
+  lint-backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./api
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install
+      - name: Run ESLint
+        run: npm run lint # Add this script to your package.json
+
+  lint-dsp:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./dsp
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run Flake8
+        run: |
+          pip install flake8
+          flake8 . # Run the linter
