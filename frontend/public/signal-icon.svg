@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-labelledby="spTitle">
+  <title id="spTitle">Signal processing</title>
+
+  <!-- outer circle -->
+  <circle cx="32" cy="32" r="30" fill="none" stroke="currentColor" stroke-width="2"></circle>
+
+  <!-- sine wave -->
+  <path d="M6 36 Q14 12 22 36 T38 36 T54 36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+
+  <!-- small spectrum bars (FFT-ish) -->
+  <rect x="22" y="38" width="2" height="6" rx="0.3" fill="currentColor"></rect>
+  <rect x="28" y="34" width="2" height="10" rx="0.3" fill="currentColor"></rect>
+  <rect x="34" y="41" width="2" height="3" rx="0.3" fill="currentColor"></rect>
+</svg>

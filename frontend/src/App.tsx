@@ -3,6 +3,7 @@ import { useState } from 'react';
 import './index.css'; // Make sure your Tailwind CSS import is here
 import axios from 'axios';
 import Plot from 'react-plotly.js';
+import RealTimeAnalyzer from './components/RealTimeAnalyser';
 
 // Define types for our data for better organization
 interface Signal {
@@ -11,6 +12,12 @@ interface Signal {
   samples: number[];
   sampleRate: number;
 }
+interface StftResult {
+  f: number[];
+  t: number[];
+  Zxx: number[][];
+}
+
 
 interface FftResult {
   freq: number[];
@@ -24,7 +31,8 @@ function App() {
   const [fftResult, setFftResult] = useState<FftResult | null>(null);
   const [sampleRate, setSampleRate] = useState<number>(44100);
   const [viewingSignal, setViewingSignal] = useState<Signal | null>(null);
-  const [activeTab, setActiveTab] = useState<'time' | 'frequency'>('time');
+  const [activeTab, setActiveTab] = useState<'time' | 'frequency' | 'spectrogram'>('time');
+  const [stftResult, setStftResult] = useState<StftResult | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -193,6 +201,25 @@ const handleExportSignal = (signal: Signal) => {
   document.body.removeChild(link);
 };
 
+const handleComputeStft = async () => {
+  // Use the currently viewed signal for the STFT
+  if (!viewingSignal) {
+    alert('Please select a signal and click "View" first.');
+    return;
+  }
+
+  try {
+    const response = await axios.post('http://localhost:3001/api/dsp/stft', {
+      samples: viewingSignal.samples,
+      sampleRate: viewingSignal.sampleRate,
+    });
+    setStftResult(response.data);
+  } catch (error) {
+    console.error('Error computing STFT:', error);
+    alert('Error computing STFT.');
+  }
+};
+
   return (
     <div className="bg-gray-900 text-white min-h-screen flex flex-col">
       {/* Header */}
@@ -237,6 +264,7 @@ const handleExportSignal = (signal: Signal) => {
               Upload & Process
             </button>
           </div>
+          <RealTimeAnalyzer/>
           
           <div className="mt-4 pt-4 border-t border-gray-600">
             <button
@@ -263,6 +291,15 @@ const handleExportSignal = (signal: Signal) => {
       className={`py-2 px-4 font-semibold ${activeTab === 'frequency' ? 'text-white border-b-2 border-blue-500' : 'text-gray-400'}`}
     >
       Frequency Domain
+    </button>
+    <button
+      onClick={() => {
+        setActiveTab('spectrogram');
+        handleComputeStft(); // Compute STFT when tab is clicked
+      }}
+      className={`py-2 px-4 font-semibold ${activeTab === 'spectrogram' ? 'text-white border-b-2 border-blue-500' : 'text-gray-400'}`}
+    >
+      Spectrogram
     </button>
   </div>
 
@@ -332,6 +369,39 @@ const handleExportSignal = (signal: Signal) => {
         </div>
       )
     )}
+
+    {/* SPECTROGRAM VIEW */}
+    {activeTab === 'spectrogram' && (
+      stftResult ? (
+        <Plot
+          data={[
+            {
+              z: stftResult.Zxx,
+              x: stftResult.t,
+              y: stftResult.f,
+              type: 'heatmap',
+              colorscale: 'Jet',
+            },
+          ]}
+          layout={{
+            autosize: true,
+            plot_bgcolor: '#000',
+            paper_bgcolor: '#1f2937',
+            font: { color: '#fff' },
+            title: { text: `Spectrogram: ${viewingSignal?.name}`, font: { size: 14 } },
+            xaxis: { title: { text: 'Time (s)' } },
+            yaxis: { title: { text: 'Frequency (Hz)' } },
+          }}
+          useResizeHandler={true}
+          className="w-full h-full"
+        />
+      ) : (
+        <div className="flex items-center justify-center h-full">
+          <p>Click the Spectrogram tab to compute and view</p>
+        </div>
+      )
+    )}
+
   </div>
 </section>
         {/* Right Panel: Signal List */}

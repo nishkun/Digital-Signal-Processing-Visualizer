@@ -67,6 +67,17 @@ app.post('/api/dsp/convolve', async (req: Request, res: Response) => {
   }
 });
 
+app.post('/api/dsp/stft', async (req: Request, res: Response) => {
+  try {
+    const dspServiceUrl = 'http://dsp-service:8000/api/dsp/stft';
+    const response = await axios.post(dspServiceUrl, req.body);
+    res.status(200).send(response.data);
+  } catch (error) {
+    console.error('Error calling DSP service for STFT:', error);
+    res.status(500).send({ message: 'Error processing STFT request' });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Backend server listening on http://localhost:${port}`);
 });
