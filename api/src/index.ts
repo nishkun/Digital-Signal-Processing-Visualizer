@@ -13,10 +13,10 @@ app.use(cors()); // <-- 2. USE cors middleware
 app.use(express.json());
 
 const storage = multer.diskStorage({
-  destination: function (_req: Request, _file: Express.Multer.File, cb: any) { // <-- ADD : any
+  destination: function (_req: Request, _file: Express.Multer.File, cb:(error: Error | null, destination: string) => void) { // <-- ADD : any
     cb(null, './uploads');
   },
-  filename: function (_req: Request, file: Express.Multer.File, cb: any) { // <-- ADD : any
+  filename: function (_req: Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) { // <-- ADD : any
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
     cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
   }
