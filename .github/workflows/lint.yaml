@@ -34,12 +34,10 @@ jobs:
           node-version: '20'
       - name: Install dependencies
         run: npm install
-      - name: Run ESLint
-        run: npm run lint # Add this script to your package.json
       - name: Grant Execute Permissions
         run: chmod +x ./node_modules/.bin/eslint
       - name: Run ESLint
-        run: npm run lint
+        run: npm run lint     
 
   lint-dsp:
     runs-on: ubuntu-latest
