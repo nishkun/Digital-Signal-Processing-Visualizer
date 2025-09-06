@@ -54,6 +54,19 @@ app.post('/api/dsp/fft', async (req: Request, res: Response) => {
   }
 });
 
+app.post('/api/dsp/convolve', async (req: Request, res: Response) => {
+  try {
+    const dspServiceUrl = 'http://127.0.0.1:8000/api/dsp/convolve';
+    // Forward the request body (containing signalA and signalB) to Python
+    const response = await axios.post(dspServiceUrl, req.body);
+    // Send the result back to the client
+    res.status(200).send(response.data);
+  } catch (error) {
+    console.error('Error calling DSP service for convolution:', error);
+    res.status(500).send({ message: 'Error processing convolution request' });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Backend server listening on http://localhost:${port}`);
 });

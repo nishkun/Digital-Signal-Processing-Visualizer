@@ -5,6 +5,17 @@ import numpy as np
 
 app = FastAPI()
 
+class ConvolveData(BaseModel):
+    signalA: list[float]
+    signalB: list[float]
+
+# 2. Add the new convolution endpoint
+@app.post("/api/dsp/convolve")
+def compute_convolution(data: ConvolveData):
+    # Use NumPy to perform the convolution
+    result = np.convolve(data.signalA, data.signalB, mode='full').tolist()
+    return {"samples": result}
+
 # Define the structure of the incoming request body
 class SignalData(BaseModel):
     samples: list[float]
