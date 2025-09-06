@@ -1,0 +1,25 @@
+# render.yaml
+services:
+  # Python DSP Service
+  - type: web
+    name: dsp-service
+    env: docker
+    dockerfilePath: ./dsp/Dockerfile
+    # Set up a health check to ensure the service is running
+    healthCheckPath: /
+
+  # Node.js API Service
+  - type: web
+    name: api-service
+    env: docker
+    dockerfilePath: ./api/Dockerfile
+    # Define environment variables for the API service
+    envVars:
+      - key: DSP_SERVICE_URL
+        value: http://dsp-service:8000
+
+  # React Frontend Service (as a Static Site)
+  - type: web
+    name: frontend-service
+    env: docker
+    dockerfilePath: ./frontend/Dockerfile

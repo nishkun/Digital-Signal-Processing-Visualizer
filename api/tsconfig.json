@@ -25,5 +25,5 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", ".eslintrc.cjs"]
+  "exclude": ["node_modules", "eslint.config.js"]
 }
