@@ -84,7 +84,7 @@ const handleUpload = async () => {
 
   try {
     // This sends the file to your Node.js server's /uploads folder
-    await axios.post('http://127.0.0.1:3001/api/upload', formData, {
+    await axios.post('http://localhost:3001/api/upload', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
     
@@ -124,7 +124,7 @@ const handleComputeFft = async () => {
   const lastSignal = signals[signals.length - 1];
 
   try {
-    const response = await axios.post('http://127.0.0.1:3001/api/dsp/fft', {
+    const response = await axios.post('http://localhost:3001/api/dsp/fft', {
       // 3. Use the data from the most recent signal
       samples: lastSignal.samples,
       sampleRate: lastSignal.sampleRate,
@@ -152,7 +152,7 @@ const handleConvolve = async () => {
   }
 
   try {
-    const response = await axios.post('http://127.0.0.1:3001/api/dsp/convolve', {
+    const response = await axios.post('http://localhost:3001/api/dsp/convolve', {
       signalA: signalA.samples,
       signalB: signalB.samples,
     });

@@ -41,7 +41,7 @@ app.post('/api/upload', upload.single('file'), (req: Request, res: Response) => 
 app.post('/api/dsp/fft', async (req: Request, res: Response) => {
   try {
     // The Python service is running on port 8000
-    const dspServiceUrl = 'http://127.0.0.1:8000/api/dsp/fft';
+    const dspServiceUrl = 'http://dsp-service:8000/api/dsp/fft';
 
     // Forward the request body to the Python service
     const response = await axios.post(dspServiceUrl, req.body);
@@ -56,7 +56,7 @@ app.post('/api/dsp/fft', async (req: Request, res: Response) => {
 
 app.post('/api/dsp/convolve', async (req: Request, res: Response) => {
   try {
-    const dspServiceUrl = 'http://127.0.0.1:8000/api/dsp/convolve';
+    const dspServiceUrl = 'http://dsp-service:8000/api/dsp/convolve';
     // Forward the request body (containing signalA and signalB) to Python
     const response = await axios.post(dspServiceUrl, req.body);
     // Send the result back to the client

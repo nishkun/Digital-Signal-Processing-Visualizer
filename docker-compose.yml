@@ -1,0 +1,27 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  # Python DSP Service
+  dsp-service:
+    build: ./dsp
+    ports:
+      - "8000:8000"
+
+  # Node.js API Service
+  api-service:
+    build: ./api
+    ports:
+      - "3001:3001"
+    # This service depends on the dsp-service
+    depends_on:
+      - dsp-service
+
+  # React Frontend Service
+  frontend-service:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    # This service depends on the api-service
+    depends_on:
+      - api-service
