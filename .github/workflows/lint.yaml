@@ -34,8 +34,10 @@ jobs:
           node-version: '20'
       - name: Install dependencies
         run: npm install
+      - name: Grant Execute Permissions
+        run: chmod +x ./node_modules/.bin/eslint
       - name: Run ESLint
-        run: npm run lint # Add this script to your package.json
+        run: npm run lint     
 
   lint-dsp:
     runs-on: ubuntu-latest
@@ -53,4 +55,4 @@ jobs:
       - name: Run Flake8
         run: |
           pip install flake8
-          flake8 . # Run the linter
+          flake8 . --exclude=venv
