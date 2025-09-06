@@ -12,6 +12,7 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/multer": "^2.0.0",
     "@types/node": "^24.3.1",
@@ -24,6 +25,7 @@
   },
   "dependencies": {
     "axios": "^1.11.0",
+    "cors": "^2.8.5",
     "multer": "^2.0.2"
   }
 }

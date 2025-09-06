@@ -3,10 +3,14 @@ import express, { Request, Response } from 'express';
 import multer from 'multer';
 import path from 'path';
 import axios from 'axios';
+import cors from 'cors';
 
 const app = express();
 app.use(express.json());
 const port = 3001;
+
+app.use(cors()); // <-- 2. USE cors middleware
+app.use(express.json());
 
 const storage = multer.diskStorage({
   destination: function (_req: Request, _file: Express.Multer.File, cb: any) { // <-- ADD : any
