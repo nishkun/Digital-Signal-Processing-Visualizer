@@ -1,2 +1,55 @@
 // api/src/index.ts
-console.log("Backend server starting...");
+import express, { Request, Response } from 'express';
+import multer from 'multer';
+import path from 'path';
+import axios from 'axios';
+
+const app = express();
+app.use(express.json());
+const port = 3001;
+
+const storage = multer.diskStorage({
+  destination: function (_req: Request, _file: Express.Multer.File, cb: any) { // <-- ADD : any
+    cb(null, './uploads');
+  },
+  filename: function (_req: Request, file: Express.Multer.File, cb: any) { // <-- ADD : any
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ storage: storage });
+
+app.post('/api/upload', upload.single('file'), (req: Request, res: Response) => {
+  if (!req.file) {
+    return res.status(400).send({ message: 'Please upload a file.' });
+  }
+
+  res.status(200).send({
+    fileId: req.file.filename,
+    url: `/uploads/${req.file.filename}`,
+    samples: 0,
+    sampleRate: 0,
+    channels: 0,
+  });
+});
+
+app.post('/api/dsp/fft', async (req: Request, res: Response) => {
+  try {
+    // The Python service is running on port 8000
+    const dspServiceUrl = 'http://127.0.0.1:8000/api/dsp/fft';
+
+    // Forward the request body to the Python service
+    const response = await axios.post(dspServiceUrl, req.body);
+
+    // Send the response from the Python service back to the client
+    res.status(200).send(response.data);
+  } catch (error) {
+    console.error('Error calling DSP service:', error);
+    res.status(500).send({ message: 'Error processing FFT request' });
+  }
+});
+
+app.listen(port, () => {
+  console.log(`Backend server listening on http://localhost:${port}`);
+});
