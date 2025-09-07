@@ -21,7 +21,10 @@ services:
   frontend-service:
     build: ./frontend
     ports:
-      - "8080:80"
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     # This service depends on the api-service
     depends_on:
       - api-service
